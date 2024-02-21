@@ -1,0 +1,40 @@
+You: Write a MATLAB program that applies a directional blur in a random direction to an image
+
+ChatGPT: Certainly! Below is a MATLAB program that applies a directional blur in a random direction to an image:
+
+```matlab
+function blurred_image = applyDirectionalBlur(image, blur_strength)
+    % Convert the image to double
+    image = im2double(image);
+    
+    % Get the size of the image
+    [rows, cols, ~] = size(image);
+    
+    % Generate a random angle between 0 and 360 degrees
+    angle = rand * 360;
+    
+    % Create a directional filter
+    h = fspecial('motion', blur_strength, angle);
+    
+    % Apply the filter to the image
+    blurred_image = imfilter(image, h, 'conv', 'circular');
+end
+```
+
+You can use this function to apply a directional blur to any image by passing the image and the strength of the blur as parameters. For example:
+
+```matlab
+% Read the image
+image = imread('example_image.jpg');
+
+% Define the strength of the blur (adjust as needed)
+blur_strength = 10;
+
+% Apply the directional blur
+blurred_image = applyDirectionalBlur(image, blur_strength);
+
+% Display the original and blurred images
+montage({image, blurred_image});
+```
+
+Make sure to replace `'example_image.jpg'` with the path to your image file. Adjust the `blur_strength` parameter according to how much blur you want to apply.

@@ -1,0 +1,62 @@
+You: Write a MATLAB program that applies a directional blur in a random direction to an image
+
+Gemini: Here is a MATLAB program that applies a directional blur in a random direction to an image:
+
+```matlab
+function blurred_image = directional_blur(image)
+
+% Get image dimensions
+[rows, cols] = size(image);
+
+% Generate random angle for blur direction
+angle = 2*pi*rand;
+
+% Define blur kernel size
+kernel_size = 11; % Adjust this value as needed
+
+% Create Gaussian kernel with specified size
+sigma = kernel_size/3;
+x = -kernel_size/2:kernel_size/2;
+kernel = exp(-x.^2/(2*sigma^2));
+
+% Rotate kernel based on random angle
+rot_kernel = imrotate(kernel, rad2deg(angle), 'bilinear');
+
+% Pad image to avoid boundary artifacts
+padded_image = padarray(image, [floor(kernel_size/2) floor(kernel_size/2)], 'both');
+
+% Apply convolution with rotated kernel
+blurred_image = imfilter(padded_image, rot_kernel, 'conv');
+
+% Crop padded image back to original size
+blurred_image = blurred_image(1:rows, 1:cols);
+
+end
+```
+
+**Explanation:**
+
+1. **`directional_blur` function:** This function takes an image as input and returns the blurred image.
+2. **Get image dimensions:** The function retrieves the number of rows and columns in the image.
+3. **Generate random angle:** A random angle between 0 and 2*pi is generated for the blur direction.
+4. **Define blur kernel size:** The size of the Gaussian kernel used for blurring is defined. You can adjust this value based on the desired blur strength.
+5. **Create Gaussian kernel:** A Gaussian kernel is created using the defined size and sigma value.
+6. **Rotate kernel:** The Gaussian kernel is rotated based on the randomly generated angle using the `imrotate` function.
+7. **Pad image:** The image is padded with zeros on all sides to avoid artifacts during convolution with the rotated kernel. The padding size is half the kernel size.
+8. **Apply convolution:** The padded image is convolved with the rotated kernel using the `imfilter` function with the 'conv' option.
+9. **Crop padded image:** The blurred image with padding is cropped back to the original image size.
+
+**Usage:**
+
+```matlab
+% Load image
+image = imread('your_image.jpg');
+
+% Apply directional blur
+blurred_image = directional_blur(image);
+
+% Show original and blurred images
+imshowpair(image, blurred_image, 'Original Image', 'Blurred Image');
+```
+
+This code will read an image, apply a directional blur with a random angle, and display both the original and blurred images. You can call the `directional_blur` function multiple times with the same image to get different blur directions.
